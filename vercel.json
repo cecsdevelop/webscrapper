@@ -1,8 +1,8 @@
 {
     "functions": {
-      "api/screenshot": { // Ruta de la función
-        "handler": "api/index.js",  // Archivo que contiene la función
-        "runtime": "nodejs16.x" // O la versión de Node.js que uses
+      "api/screenshot": {
+        "runtime": "nodejs20.x"
       }
     }
   }
+  
