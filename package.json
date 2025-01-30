@@ -8,7 +8,7 @@
       "start": "node api/screenshot.js"
     },
     "dependencies": {
+      "express": "^4.18.2",
       "puppeteer": "^22.8.2"
     }
   }
-  
