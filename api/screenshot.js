@@ -1,27 +1,29 @@
-import express from 'express';
-import puppeteer from 'puppeteer';
+const puppeteer = require('puppeteer');
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.get('/screenshot', async (req, res) => {
-  try {
-    const browser = await puppeteer.launch();
+(async () => {
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    
-    await page.goto('https://www.google.com'); // Abre Google
-    
-    const screenshot = await page.screenshot(); // Captura la pantalla
+
+    await page.goto('https://www.fisheriessupply.com/');
+
+    // Hacer clic en el botón para mostrar el formulario de login
+    await page.waitForSelector('li.nav-item--use > a');
+    await page.click('li.nav-item--use > a');
+
+    // Esperar a que aparezca el input de email
+    await page.waitForSelector('input#email');
+    await page.type('input#email', 'contreras.camilo@gmail.com');
+    await page.click('button.fs-button-standard');
+
+    // Esperar a que aparezca el input de password
+    await page.waitForSelector('input#login-password');
+    await page.type('input#login-password', 'Zxcv-2020++()');
+    await page.click('button.fs-button-standard');
+
+    // Esperar la navegación o verificación de que el login fue exitoso
+    await page.waitForNavigation();
+    console.log('Login exitoso');
+
+    // Cierra el navegador después de la prueba
     await browser.close();
-
-    res.setHeader('Content-Type', 'image/png');
-    res.send(screenshot);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al tomar la captura' });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
-});
+})();
