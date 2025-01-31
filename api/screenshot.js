@@ -1,40 +1,24 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const axios = require('axios'); // Usaremos axios para hacer solicitudes HTTP
 
 const app = express();
 app.use(express.json());
 
-app.get('/login', async (req, res) => {
+// Ruta base
+app.get('/', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
+        // Hacer una solicitud HTTP a la URL deseada
+        const response = await axios.get('https://www.fisheriessupply.com/');
 
-        await page.goto('https://www.fisheriessupply.com/');
-
-        // Hacer clic en el botón para mostrar el formulario de login
-        await page.waitForSelector('li.nav-item--use > a');
-        await page.click('li.nav-item--use > a');
-
-        // Esperar a que aparezca el input de email
-        await page.waitForSelector('input#email');
-        await page.type('input#email', 'contreras.camilo@gmail.com');
-        await page.click('button.fs-button-standard');
-
-        // Esperar a que aparezca el input de password
-        await page.waitForSelector('input#login-password');
-        await page.type('input#login-password', 'Zxcv-2020++()');
-        await page.click('button.fs-button-standard');
-
-        // Esperar la navegación o verificación de que el login fue exitoso
-        await page.waitForNavigation();
-        console.log('Login exitoso');
-
-        await browser.close();
-        res.json({ message: "Login exitoso" });
-
+        // Verificar si la solicitud fue exitosa
+        if (response.status === 200) {
+            res.json({ success: true, message: "Solicitud exitosa", data: response.data });
+        } else {
+            res.status(500).json({ success: false, error: "Error en la solicitud HTTP" });
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error en la automatización" });
+        res.status(500).json({ success: false, error: "Error en la API" });
     }
 });
 
