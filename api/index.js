@@ -1,5 +1,5 @@
-const express = require('express');
-const axios = require('axios'); // Usaremos axios para hacer solicitudes HTTP
+const express = import('express');
+const axios = import('axios'); // Usaremos axios para hacer solicitudes HTTP
 
 const app = express();
 app.use(express.json());
