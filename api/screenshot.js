@@ -1,4 +1,5 @@
-const express = require('express');
+const express = import('express');
+const puppeteer = import('puppeteer');
 const axios = require('axios'); // Usaremos axios para hacer solicitudes HTTP
 
 const app = express();
