@@ -1,12 +1,35 @@
-import puppeteer from 'puppeteer-core';
+const express = require('express');
+const puppeteer = require('puppeteer');
 
-const browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium-browser', // Usa Chromium en Render
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    headless: true
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/scrape', async (req, res) => {
+  try {
+    // Iniciar Puppeteer
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Navegar al sitio web
+    await page.goto('https://www.fisheriessupply.com/');
+
+    // Aquí irán las funcionalidades adicionales que necesites (ej: extraer datos, tomar screenshots, etc.)
+
+    // Ejemplo: Obtener el título de la página
+    const title = await page.title();
+
+    // Cerrar Puppeteer
+    await browser.close();
+
+    // Enviar la respuesta
+    res.json({ title }); // Enviamos el título como ejemplo
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
 });
 
-const page = await browser.newPage();
-await page.goto('https://example.com');
-await page.waitForTimeout(5000);
-await browser.close();
+app.listen(port, () => {
+  console.log(`Servidor escuchando en el puerto ${port}`);
+});
